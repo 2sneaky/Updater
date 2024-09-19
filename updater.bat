@@ -1,2 +1,1 @@
-echo Updated!
-pause
+Updated!
