@@ -1,0 +1,217 @@
+// JaVaLib - A GUI library inspired by Orion Library for Roblox, implemented in JavaScript
+
+const JaVaLib = {
+    // Main window creation
+    createWindow: function(title) {
+        const windowElement = document.createElement('div');
+        windowElement.style.position = 'fixed';
+        windowElement.style.top = '50%';
+        windowElement.style.left = '50%';
+        windowElement.style.transform = 'translate(-50%, -50%)';
+        windowElement.style.width = '300px';
+        windowElement.style.backgroundColor = '#2D2D2D';
+        windowElement.style.borderRadius = '10px';
+        windowElement.style.fontFamily = 'Arial, sans-serif';
+        windowElement.style.color = '#FFFFFF';
+        windowElement.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+        windowElement.style.zIndex = '1000';
+        windowElement.style.opacity = '0';
+        windowElement.style.transition = 'opacity 0.5s ease-in-out';
+
+        const titleBar = document.createElement('div');
+        titleBar.style.backgroundColor = '#1A1A1A';
+        titleBar.style.padding = '10px';
+        titleBar.style.borderTopLeftRadius = '10px';
+        titleBar.style.borderTopRightRadius = '10px';
+        titleBar.style.fontWeight = 'bold';
+        titleBar.textContent = title;
+        titleBar.style.cursor = 'move';
+
+        const content = document.createElement('div');
+        content.style.padding = '10px';
+
+        windowElement.appendChild(titleBar);
+        windowElement.appendChild(content);
+
+        document.body.appendChild(windowElement);
+
+        // Make the window draggable
+        titleBar.addEventListener('mousedown', function(e) {
+            const startX = e.clientX - windowElement.offsetLeft;
+            const startY = e.clientY - windowElement.offsetTop;
+
+            function mousemove(e) {
+                windowElement.style.left = (e.clientX - startX) + 'px';
+                windowElement.style.top = (e.clientY - startY) + 'px';
+            }
+
+            function mouseup() {
+                document.removeEventListener('mousemove', mousemove);
+                document.removeEventListener('mouseup', mouseup);
+            }
+
+            document.addEventListener('mousemove', mousemove);
+            document.addEventListener('mouseup', mouseup);
+        });
+
+        // Load-in animation
+        setTimeout(() => {
+            windowElement.style.opacity = '1';
+        }, 100);
+
+        return {windowElement, content};
+    },
+
+    // Create a button
+    createButton: function(text, callback) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.style.backgroundColor = '#3D3D3D';
+        button.style.border = 'none';
+        button.style.padding = '8px 16px';
+        button.style.margin = '5px 0';
+        button.style.borderRadius = '5px';
+        button.style.color = '#FFFFFF';
+        button.style.cursor = 'pointer';
+        button.onclick = callback;
+        return button;
+    },
+
+    // Create a toggle
+    createToggle: function(text, callback) {
+        const container = document.createElement('div');
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.style.margin = '5px 0';
+
+        const label = document.createElement('span');
+        label.textContent = text;
+        label.style.marginRight = '10px';
+
+        const toggle = document.createElement('input');
+        toggle.type = 'checkbox';
+        toggle.style.appearance = 'none';
+        toggle.style.width = '40px';
+        toggle.style.height = '20px';
+        toggle.style.backgroundColor = '#3D3D3D';
+        toggle.style.borderRadius = '10px';
+        toggle.style.position = 'relative';
+        toggle.style.cursor = 'pointer';
+
+        toggle.addEventListener('change', function() {
+            this.style.backgroundColor = this.checked ? '#4CAF50' : '#3D3D3D';
+            callback(this.checked);
+        });
+
+        container.appendChild(label);
+        container.appendChild(toggle);
+
+        return container;
+    },
+
+    // Create a slider
+    createSlider: function(text, min, max, step, callback) {
+        const container = document.createElement('div');
+        container.style.margin = '5px 0';
+
+        const label = document.createElement('div');
+        label.textContent = text;
+        label.style.marginBottom = '5px';
+
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = min;
+        slider.max = max;
+        slider.step = step;
+        slider.style.width = '100%';
+        slider.style.backgroundColor = '#3D3D3D';
+        slider.style.appearance = 'none';
+        slider.style.height = '5px';
+        slider.style.borderRadius = '5px';
+        slider.style.outline = 'none';
+
+        slider.addEventListener('input', function() {
+            callback(this.value);
+        });
+
+        container.appendChild(label);
+        container.appendChild(slider);
+
+        return container;
+    },
+
+    // Create a text input
+    createTextbox: function(placeholder, callback) {
+        const textbox = document.createElement('input');
+        textbox.type = 'text';
+        textbox.placeholder = placeholder;
+        textbox.style.width = '100%';
+        textbox.style.padding = '8px';
+        textbox.style.margin = '5px 0';
+        textbox.style.backgroundColor = '#3D3D3D';
+        textbox.style.border = 'none';
+        textbox.style.borderRadius = '5px';
+        textbox.style.color = '#FFFFFF';
+
+        textbox.addEventListener('input', function() {
+            callback(this.value);
+        });
+
+        return textbox;
+    },
+
+    // Create a dropdown
+    createDropdown: function(text, options, callback) {
+        const container = document.createElement('div');
+        container.style.margin = '5px 0';
+
+        const label = document.createElement('div');
+        label.textContent = text;
+        label.style.marginBottom = '5px';
+
+        const select = document.createElement('select');
+        select.style.width = '100%';
+        select.style.padding = '8px';
+        select.style.backgroundColor = '#3D3D3D';
+        select.style.border = 'none';
+        select.style.borderRadius = '5px';
+        select.style.color = '#FFFFFF';
+
+        options.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option;
+            optionElement.textContent = option;
+            select.appendChild(optionElement);
+        });
+
+        select.addEventListener('change', function() {
+            callback(this.value);
+        });
+
+        container.appendChild(label);
+        container.appendChild(select);
+
+        return container;
+    }
+};
+
+// Example usage:
+const {windowElement, content} = JaVaLib.createWindow('JaVaLib Demo');
+
+const button = JaVaLib.createButton('Click me!', () => alert('Button clicked!'));
+content.appendChild(button);
+
+const toggle = JaVaLib.createToggle('Toggle me!', (state) => console.log('Toggle state:', state));
+content.appendChild(toggle);
+
+const slider = JaVaLib.createSlider('Adjust me!', 0, 100, 1, (value) => console.log('Slider value:', value));
+content.appendChild(slider);
+
+const textbox = JaVaLib.createTextbox('Enter text...', (value) => console.log('Textbox value:', value));
+content.appendChild(textbox);
+
+const dropdown = JaVaLib.createDropdown('Select an option', ['Option 1', 'Option 2', 'Option 3'], (value) => console.log('Selected option:', value));
+content.appendChild(dropdown);
+
+// Make the library available globally
+window.JaVaLib = JaVaLib;
